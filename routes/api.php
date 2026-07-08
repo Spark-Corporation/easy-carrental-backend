@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CarController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\PanneController;
@@ -13,3 +14,4 @@ Route::get('/user', function (Request $request) {
 Route::apiResource('categories',CategoryController::class);
 Route::apiResource('drivers',DriverController::class);
 Route::apiResource('pannes',PanneController::class);
+Route::apiResource('cars',CarController::class);
