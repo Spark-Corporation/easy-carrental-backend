@@ -36,4 +36,9 @@ class User extends Authenticatable
         return $this->hasMany(Historic::class);
     }
 
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
+
 }
