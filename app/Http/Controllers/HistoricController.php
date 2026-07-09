@@ -14,7 +14,7 @@ class HistoricController extends Controller
      */
     public function index()
     {
-        $historics = Historic::whith('user')->orderBy('created_at','desc')->paginate();
+        $historics = Historic::with('user')->orderBy('created_at','desc')->paginate();
         return HistoricResource::collection($historics);
     }
 
@@ -32,7 +32,7 @@ class HistoricController extends Controller
      */
     public function show(int $id)
     {
-        $historic = Historic::whith('user')->findOrFail($id);
+        $historic = Historic::with('user')->findOrFail($id);
         return new HistoricResource($historic);
     }
 

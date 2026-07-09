@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('activite');
-            $table->dateTime('dateConnexion');
-            $table->dateTime('datedeconnexion');
+            $table->timestamp('dateConnexion');
+            $table->timestamp('heureDeconnexion')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
