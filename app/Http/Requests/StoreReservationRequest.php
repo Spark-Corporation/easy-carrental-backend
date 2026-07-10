@@ -27,7 +27,7 @@ class StoreReservationRequest extends FormRequest
             'car_id'      => 'required|exists:cars,id',
             'driver_id'   => 'nullable|exists:drivers,id',
             'dateStart'  => 'required|date|after_or_equal:today',
-            'dateBack'   => 'nullable|date|after:dateStart',
+            'dateBack'   => 'nullable|date|after_or_equal:dateStart',
             'dayAmount'      => 'nullable|numeric|min:0',
             'driverAmount'   => 'nullable|numeric|min:0',
             'type'         => 'required|in:reservation,leasing',

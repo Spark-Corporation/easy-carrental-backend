@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Resources\InvoiceResource;
 use Illuminate\Database\Eloquent\Model;
 
 class Reservation extends Model
@@ -17,6 +18,9 @@ class Reservation extends Model
     }
     public function driver() {
         return $this->belongsTo(Driver::class);
+    }
+    public function invoice() {
+        return $this->hasOne(Invoice::class);
     }
 
 }

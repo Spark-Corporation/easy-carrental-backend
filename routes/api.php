@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HistoricController;
@@ -20,5 +21,6 @@ Route::apiResource('cars',CarController::class);
 Route::apiResource('historics',HistoricController::class);
 Route::apiResource('users',UserController::class);
 Route::apiResource('reservations', ReservationController::class);
+Route::apiResource('invoices',InvoiceController::class);
 
 
