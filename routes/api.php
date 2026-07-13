@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\UserController;
@@ -23,6 +24,7 @@ Route::apiResource('historics',HistoricController::class);
 Route::apiResource('users',UserController::class);
 Route::apiResource('reservations', ReservationController::class);
 Route::apiResource('invoices',InvoiceController::class);
+Route::apiResource('payments',PaymentController::class);
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
