@@ -31,6 +31,7 @@ class StoreCarRequest extends FormRequest
             'photo'=>'string|required|max:255',
             'imatriculation' => 'string|required|max:255|unique:cars,imatriculation',
             'description'=>'string|max:255',
+            'status'=>'string|required|max:255',
             'prix_km'=>'numeric|required|min:0',
             'state'=>'string|required|max:255',
             'place'=>'numeric|required|min:0',
@@ -88,6 +89,9 @@ class StoreCarRequest extends FormRequest
 
             'category_id.required' => 'La catégorie est obligatoire.',
             'category_id.exists'   => 'La catégorie sélectionnée n\'existe pas.',
+
+            'status.required'    => 'Le statut est obligatoire.',
+            'status.string'      => 'Le statut doit être une chaîne de caractères.',
         ];
     }
 

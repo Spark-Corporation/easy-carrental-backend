@@ -35,6 +35,7 @@ class StoreDriverRequest extends FormRequest
             ],
             'phone' => 'required|string|max:20',
             'photo' => 'nullable|string',
+            'status' => 'string|required|max:255',
         ];
     }
 
@@ -46,6 +47,8 @@ class StoreDriverRequest extends FormRequest
             'lastname.unique'    => 'Un chauffeur avec ce prénom et ce nom existe déjà.',
             'phone.required'     => 'Le numéro de téléphone est obligatoire.',
             'photo.string'       => 'La photo doit être une chaîne de caractères (chemin du fichier).',
+            'status.required'    => 'Le statut est obligatoire.',
+            'status.string'      => 'Le statut doit être une chaîne de caractères.',
         ];
     }
 
