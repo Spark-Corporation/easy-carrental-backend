@@ -18,10 +18,9 @@ return new class extends Migration
             $table->unsignedBigInteger('driver_id')->nullable();
             $table->datetime('dateStart')->default(now());
             $table->datetime('dateBack')->nullable();
-            $table->integer('dayAmount')->nullable();
             $table->decimal('driverAmount', 10, 2)->nullable();
             $table->enum('type', ['reservation', 'leasing'])->default('reservation');
-            $table->enum('status', ['En attente', 'validé', 'annulée'])->default('En attente');
+            $table->enum('status', ['En attente', 'validé', 'annulée', 'refusée', 'en cours', 'terminée'])->default('En attente');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('car_id')->references('id')->on('cars')->onDelete('cascade');
             $table->foreign('driver_id')->references('id')->on('drivers')->onDelete('set null');

@@ -21,12 +21,14 @@ return new class extends Migration
             $table->string('photo');
             $table->string('imatriculation')->unique();
             $table->string('description')->nullable();
-            $table->double('prix_km');
+            $table->enum('status', ['disponible', 'loué', 'indisponible','en maintenance','en panne'])->default('disponible');
+            $table->decimal('kmAmount', 10, 2);
+            $table->decimal('dayAmount', 10, 2);
             $table->string('state');
             $table->integer('place');
             $table->integer('door');
-            $table->double('kilometrage');
-            $table->double('niveauCarburant');
+            $table->decimal('kilometrage', 10, 2);
+            $table->decimal('niveauCarburant', 10, 2);
             $table->string('domage')->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->timestamps();

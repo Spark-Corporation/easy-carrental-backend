@@ -19,7 +19,6 @@ class PaymentResource extends JsonResource
             'invoice_id' => $this->invoice_id,
             'modePayment' => $this->modePayment,
             'amount' => $this->amount,
-            'status' => $this->status,
             'invoice' => new InvoiceResource($this->whenLoaded('invoice')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

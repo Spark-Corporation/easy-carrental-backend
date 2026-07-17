@@ -28,10 +28,9 @@ class StoreReservationRequest extends FormRequest
             'driver_id'   => 'nullable|exists:drivers,id',
             'dateStart'  => 'required|date|after_or_equal:today',
             'dateBack'   => 'nullable|date|after_or_equal:dateStart',
-            'dayAmount'      => 'nullable|numeric|min:0',
             'driverAmount'   => 'nullable|numeric|min:0',
             'type'         => 'required|in:reservation,leasing',
-            'status'      => 'required|in:En attente,validé,annulée',
+            'status'      => 'required|in:En attente,validé,annulée,refusée,en cours,terminée',
         ];
     }
 
@@ -53,7 +52,7 @@ class StoreReservationRequest extends FormRequest
             'type.required'       => 'Le type de réservation est obligatoire.',
             'type.in'             => 'Le type de réservation doit être "reservation" ou "leasing".',
             'status.required'     => 'Le statut est obligatoire.',
-            'status.in'           => 'Le statut doit être "En attente", "validé" ou "annulée".',
+            'status.in'           => 'Le statut doit être "En attente", "validé", "annulée", "refusée", "en cours" ou "terminée".',
         ];
     }
 }

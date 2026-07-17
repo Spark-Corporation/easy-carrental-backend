@@ -18,7 +18,6 @@ class ReservationResource extends JsonResource
             'id'         => $this->id,
             'dateStart' => $this->dateStart,
             'dateBack'  => $this->dateBack,
-            'dayAmount'     => $this->dayAmount,
             'driverAmount'  => $this->driverAmount,
             'type'       => $this->type,
             'status'     => $this->status,

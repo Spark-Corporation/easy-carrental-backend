@@ -29,7 +29,7 @@ class Invoice extends Model
                     $days = $startDate->diffInDays($endDate);
                 }
 
-                $dayAmount = (float) ($invoice->reservation->dayAmount ?? 0);
+                $dayAmount = (float) ($invoice->reservation->car->dayAmount ?? 0);
             }
 
             $baseAmount = max(0, $days * $dayAmount);

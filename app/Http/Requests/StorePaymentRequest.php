@@ -26,7 +26,6 @@ class StorePaymentRequest extends FormRequest
             'invoice_id' => 'required|exists:invoices,id',
             'modePayment' => 'required|in:espece,carte bancaire,virement bancaire,cheque',
             'amount' => 'required|numeric|min:0',
-            'status' => 'required|in:payé,En attente',
         ];
     }
 
@@ -40,8 +39,6 @@ class StorePaymentRequest extends FormRequest
             'amount.required' => 'Le montant est obligatoire.',
             'amount.numeric' => 'Le montant doit être un nombre.',
             'amount.min' => 'Le montant doit être supérieur ou égal à 0.',
-            'status.required' => 'Le statut est obligatoire.',
-            'status.in' => 'Le statut doit être "payé" ou "En attente".',
         ];
     }
 }

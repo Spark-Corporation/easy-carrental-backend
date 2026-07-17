@@ -30,7 +30,7 @@ class StoreInvoiceRequest extends FormRequest
             'tvaAmount' => 'nullable|numeric|min:0',
             'amount' => 'numeric|min:0',
             'totalAmount' => 'numeric|min:0',
-            'status' => 'required|in:payé,En attente',
+            'status' => 'required|in:payé,en attente,non payé,annulé,partiellement payé',
         ];
     }
     public function messages(): array
@@ -55,7 +55,7 @@ class StoreInvoiceRequest extends FormRequest
             'totalAmount.numeric' => 'Le montant total doit être un nombre.',
             'totalAmount.min' => 'Le montant total doit être supérieur ou égal à 0.',
             'status.required' => 'Le statut est obligatoire.',
-            'status.in' => 'Le statut doit être "payé" ou "En attente".',
+            'status.in' => 'Le statut doit être l\'un des suivants : payé, en attente, non payé, annulé, partiellement payé.',
         ];
     }
 }

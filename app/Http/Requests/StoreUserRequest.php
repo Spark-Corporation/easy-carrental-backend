@@ -35,13 +35,14 @@ class StoreUserRequest extends FormRequest
             'firstname'  => 'required|string|max:255',
             'email'      => 'required|string|email|max:255|unique:users,email',
             'password'   => 'required|string|min:8',
-            'type'       => 'required|string|max:255',
-            'CNI'        => 'required|string|max:50',
-            'adress'     => 'required|string|max:255',
+            'type'       => 'nullable|in:physique,morale',
+            'pieceType'  => 'required|string|max:255',
+            'pieceNumber' => 'required|string|max:50',
+            'address'    => 'required|string|max:255',
             'photo'      => 'nullable|string|max:255',
             'phone'      => 'required|string|max:20',
             'active'     => 'boolean',
-            'role'       => 'string|max:50',
+            'role'       => 'required|string|max:50',
         ];
     }
     public function messages(): array
@@ -55,10 +56,12 @@ class StoreUserRequest extends FormRequest
             'email.unique'        => 'Cet email existe déjà.',
             'password.required'   => 'Le mot de passe est obligatoire.',
             'password.min'        => 'Le mot de passe doit contenir au moins 8 caractères.',
-            'type.required'       => 'Le type est obligatoire.',
-            'CNI.required'        => 'Le numéro de CNI est obligatoire.',
-            'adress.required'     => 'L\'adresse est obligatoire.',
+            'type.in'              => 'Le type doit être soit "physique" soit "morale".',
+            'pieceType.required'  => 'Le type de pièce est obligatoire.',
+            'pieceNumber.required' => 'Le numéro de pièce est obligatoire.',
+            'address.required'    => 'L\'adresse est obligatoire.',
             'phone.required'      => 'Le numéro de téléphone est obligatoire.',
+            'role.required'       => 'Le rôle est obligatoire.',
         ];
     }
 }

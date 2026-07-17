@@ -17,9 +17,10 @@ return new class extends Migration
             $table->string('firstname');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('type');
-            $table->string('CNI');
-            $table->string('adress');
+            $table->enum('type', ['physique', 'morale'])->nullable();
+            $table->string('pieceType');
+            $table->string('pieceNumber');
+            $table->string('address');
             $table->string('photo')->nullable();
             $table->string('phone');
             $table->boolean('active')->default(true);

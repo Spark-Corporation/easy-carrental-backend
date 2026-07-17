@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('invoice_id');
-            $table->enum('modePayment', ['espece', 'carte bancaire', 'virement bancaire', 'cheque'])->default('espece');
+            $table->string('modePayment', 50)->default('espece');
             $table->decimal('amount', 10, 2);
-            $table->enum('status', ['payé', 'En attente'])->default('En attente');
             $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');
             $table->timestamps();
         });

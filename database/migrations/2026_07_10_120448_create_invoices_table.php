@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('tvaAmount', 10, 2)->default(0);
             $table->decimal('amount', 10, 2)->default(0);
             $table->decimal('totalAmount', 10, 2);
-            $table->enum('status', ['payé', 'En attente'])->default('En attente');
+            $table->enum('status', ['payé', 'en attente', 'non payé','annulé','partiellement payé'])->default('en attente');
             $table->foreign('reservation_id')->references('id')->on('reservations')->onDelete('cascade');
             $table->timestamps();
         });

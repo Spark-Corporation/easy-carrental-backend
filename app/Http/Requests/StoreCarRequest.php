@@ -31,13 +31,14 @@ class StoreCarRequest extends FormRequest
             'photo'=>'string|required|max:255',
             'imatriculation' => 'string|required|max:255|unique:cars,imatriculation',
             'description'=>'string|max:255',
-            'status'=>'string|required|max:255',
-            'prix_km'=>'numeric|required|min:0',
+            'status'=>'string|required|max:255|in:disponible,loué,indisponible,en maintenance,en panne',
+            'kmAmount'=>'decimal:10,2|required|min:0',
+            'dayAmount'=>'decimal:10,2|required|min:0',
             'state'=>'string|required|max:255',
             'place'=>'numeric|required|min:0',
             'door'=>'numeric|required|min:0',
-            'kilometrage'=>'numeric|required|min:0',
-            'niveauCarburant'=>'numeric|required|min:0',
+            'kilometrage'=>'decimal:10,2|required|min:0',
+            'niveauCarburant'=>'decimal:10,2|required|min:0',
             'domage'=>'string|max:255',
             'category_id' => 'required|exists:categories,id',
         ];
@@ -67,8 +68,11 @@ class StoreCarRequest extends FormRequest
 
             'description.string'       => 'La description doit être une chaîne de caractères.',
 
-            'prix_km.required'         => 'Le prix par kilomètre est obligatoire.',
-            'prix_km.numeric'          => 'Le prix par kilomètre doit être un nombre.',
+            'kmAmount.required'         => 'Le prix par kilomètre est obligatoire.',
+            'kmAmount.decimal'          => 'Le prix par kilomètre doit être un nombre décimal.',
+
+            'dayAmount.required'         => 'Le prix par jour est obligatoire.',
+            'dayAmount.decimal'          => 'Le prix par jour doit être un nombre décimal.',
 
             'state.required'           => 'L’état du véhicule est obligatoire.',
             'state.string'             => 'L’état doit être une chaîne de caractères.',
@@ -80,10 +84,10 @@ class StoreCarRequest extends FormRequest
             'door.numeric'             => 'Le nombre de portes doit être un nombre.',
 
             'kilometrage.required'     => 'Le kilométrage est obligatoire.',
-            'kilometrage.numeric'      => 'Le kilométrage doit être un nombre.',
+            'kilometrage.decimal'      => 'Le kilométrage doit être un nombre décimal.',
 
             'niveauCarburant.required' => 'Le niveau de carburant est obligatoire.',
-            'niveauCarburant.numeric'  => 'Le niveau de carburant doit être un nombre.',
+            'niveauCarburant.decimal'  => 'Le niveau de carburant doit être un nombre décimal.',
 
             'domage.string'            => 'Le champ dommage doit être une chaîne de caractères.',
 
