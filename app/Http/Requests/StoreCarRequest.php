@@ -28,7 +28,7 @@ class StoreCarRequest extends FormRequest
             'type'=>'string|required|max:255',
             'model'=>'string|required|max:255',
             'color'=>'string|required|max:255',
-            'photo'=>'string|required|max:255',
+            'photo' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             'imatriculation' => 'string|required|max:255|unique:cars,imatriculation',
             'description'=>'string|max:255',
             'status'=>'string|required|max:255|in:disponible,loué,indisponible,en maintenance,en panne',

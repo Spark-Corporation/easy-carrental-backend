@@ -21,6 +21,7 @@ class CarResource extends JsonResource
             'model'            => $this->model,
             'color'            => $this->color,
             'photo'            => $this->photo,
+            'photo_url' => $this->photo ? asset('storage/' . $this->photo) : null,
             'imatriculation'   => $this->imatriculation,
             'description'      => $this->description,
             'status'           => $this->status,
