@@ -12,7 +12,7 @@ class ReservationController extends Controller
     // Liste des réservations
     public function index()
     {
-        $reservations = Reservation::with(['user','car','driver'])->orderBy('created_at','desc')->paginate(15);
+        $reservations = Reservation::with(['user','car','driver','car.category','invoice'])->orderBy('created_at','desc')->paginate(15);
         return ReservationResource::collection($reservations);
     }
 
@@ -26,7 +26,7 @@ class ReservationController extends Controller
     // Afficher une réservation
     public function show(int $id)
     {
-        $reservation = Reservation::with(['user','car','driver'])->findOrFail($id);
+        $reservation = Reservation::with(['user','car','driver','car.category','invoice'])->findOrFail($id);
         return new ReservationResource($reservation);
     }
 
