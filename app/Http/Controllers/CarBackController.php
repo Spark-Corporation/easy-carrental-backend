@@ -26,6 +26,25 @@ class CarBackController extends Controller
         $data = $request->validated();
         $carBack = CarBack::create($data);
 
+        // Récupérer la réservation liée
+        $reservation = $carBack->reservation;
+
+        if ($reservation) {
+            $reservation->status = 'Terminée';
+            $reservation->dateBack = $carBack->returnDate;
+            $reservation->save();
+
+            // Mettre à jour la voiture liée
+            $car = $reservation->car;
+            if ($car) {
+                $car->kilometrage = $carBack->returnKm;
+                $car->niveauCarburant = $carBack->fuel_level;
+                $car->state = $carBack->state;
+                $car->status = 'Disponible';
+                $car->save();
+            }
+        }
+
         return new CarBackResource($carBack);
     }
 

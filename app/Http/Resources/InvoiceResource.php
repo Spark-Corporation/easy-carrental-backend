@@ -25,6 +25,7 @@ class InvoiceResource extends JsonResource
             'amount' => $this->amount,
             'totalAmount' => $this->totalAmount,
             'status' => $this->status,
+            'totalHT'       => round(max(0, $this->amount - $this->reductionAmount + $this->driverAmount), 2),
             'reservation' => new ReservationResource($this->whenLoaded('reservation')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

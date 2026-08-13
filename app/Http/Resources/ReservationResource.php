@@ -49,7 +49,7 @@ class ReservationResource extends JsonResource
             'computed_status' => $this->computed_status,
 
             'user' => new UserResource($this->whenLoaded('user')),
-            'category' => new CategoryResource($this->whenLoaded('category')),
+
             'car' => new CarResource($this->whenLoaded('car')),
             'driver' => new DriverResource($this->whenLoaded('driver')),
             'invoice'        => new InvoiceResource($this->whenLoaded('invoice')),

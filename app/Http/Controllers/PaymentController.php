@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Http\Resources\PaymentResource;
 use App\Http\Requests\StorePaymentRequest;
 use App\Models\Payment;
@@ -22,6 +24,13 @@ class PaymentController extends Controller
     public function store(StorePaymentRequest $request)
     {
         $payment = Payment::create($request->validated());
+        // Récupérer la facture liée
+        $invoice = $payment->invoice;
+
+        if ($invoice) {
+            $invoice->status = 'Payé';
+            $invoice->save();
+        }
         return new PaymentResource($payment);
     }
 

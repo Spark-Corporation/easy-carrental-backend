@@ -15,7 +15,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::orderBy('created_at','desc')->paginate(15);
+        $users = User::where('active', true)->orderBy('created_at', 'desc')->paginate(15);
         return UserResource::collection($users);
     }
 
@@ -38,7 +38,9 @@ class UserController extends Controller
      */
     public function show(int $id)
     {
-        $user = User::findOrFail($id);
+       $user = User::where('id', $id)
+                ->where('active', true)
+                ->firstOrFail();
         return new UserResource($user);
     }
 
@@ -63,7 +65,8 @@ class UserController extends Controller
     public function destroy(int $id)
     {
         $user = User::findOrFail($id);
-        $user->delete();
+        $user->active = false;
+        $user->save();
         return response()->Json(["message" => "utilisateur supprimé"],200);
     }
 }

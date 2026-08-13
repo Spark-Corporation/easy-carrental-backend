@@ -22,6 +22,7 @@ class CarBackResource extends JsonResource
             'state'          => $this->state,
             'domage'         => $this->domage,
             'comment'        => $this->comment,
+            'returnDate' => $this->returnDate,
             'created_at'     => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'     => $this->updated_at?->format('Y-m-d H:i:s'),
 

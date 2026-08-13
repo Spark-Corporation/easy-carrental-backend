@@ -19,24 +19,11 @@ class UserSeeder extends Seeder
             'firstname'   => 'Faure',
             'email'       => 'faure@example.com',
             'password'    => Hash::make('password123'),
-            'phone'       => '900000001',
+            'phone'       => '70443691',
             'pieceType'    => 'CNI',
             'pieceNumber'   => '123456789',
-            'address'     => 'Sagbado',
+            'address'     => 'baguida',
             'role'        => 'admin',
-            'active'      => true,
-        ]);
-
-        User::create([
-            'lastname'    => 'Doe',
-            'firstname'   => 'John',
-            'email'       => 'john@example.com',
-            'password'    => Hash::make('password123'),
-            'phone'       => '900000002',
-            'pieceType'    => 'CNI',
-            'pieceNumber'   => '123456789',
-            'address'     => 'Lomé',
-            'role'        => 'client',
             'active'      => true,
         ]);
 

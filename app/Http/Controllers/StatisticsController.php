@@ -18,25 +18,25 @@ class StatisticsController extends Controller
             'totalCars' => Car::query()->count(),
             'totalDrivers' => Driver::query()->count(),
             'totalReservations' => Reservation::query()->count(),
-            'totalClients' => User::query()->where('role', 'client')->count(),
-            'totalAdmins' => User::query()->where('role', 'admin')->count(),
+            'totalClients' => User::query()->where('active', true)->where('role', 'client')->count(),
+            'totalAdmins' => User::query()->where('active', true)->where('role', 'admin')->count(),
             'activeReservations' => Reservation::all()
                 ->filter(fn($r) => $r->computed_status === 'En cours')
                 ->count(),
-            'availableDrivers' => Driver::query()->where('status', 'Disponible')->count(),
-            'unAvailableDrivers' => Driver::query()->where('status', 'Indisponible')->count(),
-            'busyDrivers' => Driver::query()->where('status', 'Affecté')->count(),
+            'availableDrivers' => Driver::query()->where('active', true)->where('status', 'Disponible')->count(),
+            'unAvailableDrivers' => Driver::query()->where('active', true)->where('status', 'Indisponible')->count(),
+            'busyDrivers' => Driver::query()->where('active', true)->where('status', 'Affecté')->count(),
             'monthlyRevenue' => Invoice::query()->whereMonth('created_at', now()->month)
                 ->whereYear('created_at', now()->year)
                 ->sum('amount'),
 
-            'carsAvailable' => Car::query()->where('status', 'Disponible')->count(),
-            'carsUnAvailable' => Car::query()->where('status', 'Indisponible')->count(),
-            'carsRented' => Car::query()->where('status', 'Louée')->count(),
-            'carsBroken' => Car::query()->where('status', 'En panne')->count(),
-            'carsInRepair' => Car::query()->where('status', 'En réparation')->count(),
+            'carsAvailable' => Car::query()->where('active', true)->where('status', 'Disponible')->count(),
+            'carsUnAvailable' => Car::query()->where('active', true)->where('status', 'Indisponible')->count(),
+            'carsRented' => Car::query()->where('active', true)->where('status', 'Louée')->count(),
+            'carsBroken' => Car::query()->where('active', true)->where('status', 'En panne')->count(),
+            'carsInRepair' => Car::query()->where('active', true)->where('status', 'En réparation')->count(),
 
-            'waitingForDriver' => Reservation::query()
+            'waitingForDriver' => Reservation::query()->whereIn('status',['En attente','Validée'])
                 ->whereNull('driver_id')
                 ->where('driverAmount', '>', 0)
                 ->count(),

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('carBack', function (Blueprint $table) {
+        Schema::create('car_backs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('reservation_id');
             $table->decimal('returnKm', 15, 2);
@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('state');
             $table->string('domage')->nullable();
             $table->string('comment')->nullable();
+            $table->dateTime('returnDate')->nullable();
             $table->foreign('reservation_id')->references('id')->on('reservations')->onDelete('cascade');
             $table->timestamps();
         });
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('carBack');
+        Schema::dropIfExists('car_backs');
     }
 };

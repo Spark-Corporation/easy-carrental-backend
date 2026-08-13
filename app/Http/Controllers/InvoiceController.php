@@ -14,7 +14,7 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        $invoices = Invoice::with('reservation')->orderBy('created_at', 'desc')->paginate(15);
+        $invoices = Invoice::with('reservation','reservation.car.category')->orderBy('created_at', 'desc')->paginate(15);
         return  InvoiceResource::collection($invoices);
     }
 
@@ -33,7 +33,7 @@ class InvoiceController extends Controller
      */
     public function show(int $id)
     {
-        $invoice = Invoice::with('reservation')->findOrFail($id);
+        $invoice = Invoice::with('reservation','reservation.car.category')->findOrFail($id);
         return new InvoiceResource($invoice);
     }
 

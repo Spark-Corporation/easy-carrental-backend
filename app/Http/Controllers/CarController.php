@@ -15,7 +15,18 @@ class CarController extends Controller
      */
     public function index()
     {
-        $cars = Car::with('category')->OrderBy('created_at', 'desc')->paginate(15);
+        $cars = Car::where('active', true)->with('category')->OrderBy('created_at', 'desc')->paginate(15);
+        return CarResource::collection($cars);
+    }
+
+    public function availableCars()
+    {
+        $cars = Car::with('category')
+            ->where('status', 'Disponible')
+            ->where('active', true)
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+
         return CarResource::collection($cars);
     }
 
@@ -46,7 +57,9 @@ class CarController extends Controller
      */
     public function show(int $id)
     {
-        $car = Car::with('category')->findOrFail($id);
+        $car = Car::where('id', $id)->with('category')
+                ->where('active', true)
+                ->firstOrFail();
         return new CarResource($car);
     }
 
@@ -92,7 +105,9 @@ class CarController extends Controller
             ], 400);
         }
 
-        $car->delete();
+        // Mettre la voiture en inactive
+        $car->active = false;
+        $car->save();
         return response()->Json(["message" => 'voiture supprimée'], 200);
     }
 }

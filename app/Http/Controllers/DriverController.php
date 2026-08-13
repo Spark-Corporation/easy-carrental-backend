@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Http\Requests\StoreDriverRequest;
 use App\Http\Resources\DriverResource;
 use App\Models\Driver;
@@ -14,9 +15,21 @@ class DriverController extends Controller
      */
     public function index()
     {
-        $drivers = Driver::orderBy('created_at','desc')->paginate(10);
+        $drivers = Driver::where('active', true)->orderBy('created_at', 'desc')->paginate(10);
         return DriverResource::collection($drivers);
     }
+
+    public function availableDrivers()
+    {
+        $drivers = Driver::query()
+            ->where('status', 'Disponible')
+            ->where('active', true)
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+
+        return DriverResource::collection($drivers);
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -38,7 +51,9 @@ class DriverController extends Controller
 
     public function show(int $id)
     {
-        $driver = Driver::findOrFail($id);
+        $driver = driver::where('id', $id)
+                ->where('active', true)
+                ->firstOrFail();
         return new DriverResource($driver);
     }
 
@@ -67,7 +82,8 @@ class DriverController extends Controller
     public function destroy(int $id)
     {
         $driver = Driver::findOrFail($id);
-        $driver->delete();
-        return response()->Json(['message'=>'Chauffeur supprimé'],200);
+        $driver->active = false;
+        $driver->save();
+        return response()->Json(['message' => 'Chauffeur supprimé'], 200);
     }
 }

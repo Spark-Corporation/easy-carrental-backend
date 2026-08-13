@@ -50,7 +50,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereEmailVerifiedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereFirstname($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User where($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereLastname($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePhone($value)
@@ -63,6 +63,13 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
  */
 
+/**
+ * App\Models\User
+ *
+ * @method static int count()
+ * @method static \Illuminate\Database\Eloquent\Builder where(string $column, string $operator = null, mixed $value = null)
+ * @method static \Illuminate\Database\Eloquent\Builder query()
+ */
 #[Fillable(['lastname','firstname','email','password','type','pieceType','pieceNumber','address','photo','phone','active','role',])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable

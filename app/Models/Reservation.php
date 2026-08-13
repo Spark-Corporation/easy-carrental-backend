@@ -8,7 +8,7 @@ use App\Models\Setting;
 
 /**
  * App\Models\Reservation
- *
+ * @mixin \Illuminate\Database\Eloquent\Builder<\App\Models\Reservation>
  * @method static \Illuminate\Database\Eloquent\Builder query()
  * @method static \Illuminate\Database\Eloquent\Builder selectRaw(string $expression, array $bindings = [])
  * @method static \Illuminate\Database\Eloquent\Builder whereBetween(string $column, array $values)
@@ -81,11 +81,11 @@ class Reservation extends Model
                 $reservation->status = 'En attente'; // valeur par défaut
             }
 
-            if (empty($reservation->driver_id)) {
-                $reservation->type = 'reservation';
-            } else {
-                $reservation->type = 'leasing';
-            }
+            // if (empty($reservation->driver_id)) {
+            //     $reservation->type = 'reservation';
+            // } else {
+            //     $reservation->type = 'leasing';
+            // }
             $reservation->driverAmount = $reservation->calculateDriverAmount($driverDailyRate);
         });
     }
