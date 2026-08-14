@@ -96,7 +96,6 @@ class Invoice extends Model
     {
         return $this->belongsTo(Reservation::class);
     }
-
     public function payment()
     {
         return $this->hasMany(Payment::class);

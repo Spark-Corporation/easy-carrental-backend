@@ -27,7 +27,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
-    protected $fillable = ['id','invoice_id','modePayment','amount'];
+    protected $fillable = ['id', 'paymentNumber','invoice_id', 'modePayment', 'amount'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($payment) {
+            if (empty($payment->paymentNumber)) {
+                $lastId = Payment::max('id') + 1;
+                $payment->paymentNumber = 'PAY-' . str_pad($lastId, 10, '0', STR_PAD_LEFT);
+            }
+        });
+    }
+
 
     public function invoice()
     {

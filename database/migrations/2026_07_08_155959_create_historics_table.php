@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('historics', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('activite');
-            $table->timestamp('dateConnexion');
-            $table->timestamp('heureDeconnexion')->nullable();
+            $table->string('action');
+            $table->timestamp('actionDate');
+            $table->string('description')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

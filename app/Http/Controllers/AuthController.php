@@ -57,8 +57,8 @@ class AuthController extends Controller
 
     Historic::create([
         'user_id'       => $user->id,
-        'activite'      => 'login',
-        'dateConnexion' => now(),
+        'action'      => 'login',
+        'actionDate' => now(),
     ]);
 
     return response()->json([
@@ -96,8 +96,8 @@ public function loginClient(Request $request)
 
     Historic::create([
         'user_id'       => $user->id,
-        'activite'      => 'login',
-        'dateConnexion' => now(),
+        'action'      => 'login',
+        'actionDate' => now(),
     ]);
 
     return response()->json([
@@ -119,8 +119,8 @@ public function loginClient(Request $request)
         // Enregistrement de l'historique de déconnexion
         Historic::create([
             'user_id' => $request->user()->id,
-            'activite' => 'logout',
-            'heureDeconnexion' => now()
+            'action' => 'logout',
+            'actionDate' => now()
         ]);
 
         return response()->json(['message' => 'deconnexion réussie'], 200);

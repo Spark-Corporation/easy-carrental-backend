@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            $table->string('paymentNumber')->unique();
             $table->unsignedBigInteger('invoice_id');
             $table->string('modePayment', 50)->default('espece');
             $table->decimal('amount', 10, 2);

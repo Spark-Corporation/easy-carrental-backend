@@ -19,7 +19,7 @@ use App\Models\Setting;
 
 class Reservation extends Model
 {
-    protected $fillable = ['id', 'user_id', 'car_id', 'driver_id', 'dateStart', 'dateBack', 'driverAmount', 'type', 'status'];
+    protected $fillable = ['id','reservationNumber', 'user_id', 'car_id', 'driver_id', 'dateStart', 'dateBack', 'driverAmount', 'type', 'status'];
 
     public function calculateDriverAmount(float $driverDailyRate): float
     {
@@ -75,17 +75,16 @@ class Reservation extends Model
         parent::boot();
 
         static::saving(function ($reservation) {
+            if (empty($reservation->reservationNumber)) {
+                $lastId = Reservation::max('id') + 1;
+                $reservation->reservationNumber = 'RES-' . str_pad($lastId, 10, '0', STR_PAD_LEFT);
+            }
+
             $driverDailyRate = Setting::get('driverDailyRate', 0); // tarif global fixé par l’entreprise
 
             if (empty($reservation->status)) {
                 $reservation->status = 'En attente'; // valeur par défaut
             }
-
-            // if (empty($reservation->driver_id)) {
-            //     $reservation->type = 'reservation';
-            // } else {
-            //     $reservation->type = 'leasing';
-            // }
             $reservation->driverAmount = $reservation->calculateDriverAmount($driverDailyRate);
         });
     }

@@ -33,7 +33,7 @@ class StorePaymentRequest extends FormRequest
     {
         return [
             'invoice_id.required' => 'La facture est obligatoire.',
-            'invoice_id.exists' => 'La facture sélectionnée n\'existe pas.',
+            'invoice_id.exists' => 'La facture  n\'existe pas.',
             'modePayment.required' => 'Le mode de paiement est obligatoire.',
             'amount.required' => 'Le montant est obligatoire.',
             'amount.numeric' => 'Le montant doit être un nombre.',

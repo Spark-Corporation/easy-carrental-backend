@@ -6,11 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Historic extends Model
 {
-    protected $fillable = ['id','user_id','activite','dateConnexion','heureDeconnexion'];
+    protected $fillable = ['id','user_id','action','actionDate','description'];
 
     protected $casts = [
-        'dateConnexion' => 'datetime',
-        'heureDeconnexion' => 'datetime',
+        'actionDate' => 'datetime',
     ];
 
     public function User()

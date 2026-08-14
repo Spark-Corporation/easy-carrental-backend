@@ -24,7 +24,6 @@ class StoreInvoiceRequest extends FormRequest
     {
         return [
             'reservation_id' => 'required|exists:reservations,id|unique:invoices,reservation_id',
-            //'invoiceNumber' => 'string|unique:invoices,invoiceNumber',
             'driverAmount' => 'numeric|min:0',
             'reductionAmount' => 'nullable|numeric|min:0',
             'tvaAmount' => 'nullable|numeric|min:0',
