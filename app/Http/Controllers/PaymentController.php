@@ -39,7 +39,7 @@ class PaymentController extends Controller
      */
     public function show(int $id)
     {
-        $payment = Payment::with('invoice')->findOrFail($id);
+        $payment = Payment::with('invoice','invoice.reservation.car.category')->findOrFail($id);
         return new PaymentResource($payment);
     }
 

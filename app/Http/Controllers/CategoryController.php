@@ -18,7 +18,7 @@ class CategoryController extends Controller
     public function index()
     {
         //$categories = Category::latest()->paginate(10);
-        $categories = Category::orderBy('created_at', 'desc')->paginate(10);
+        $categories = Category::where('active', true)->orderBy('created_at', 'desc')->paginate(10);
         return CategoryResource::collection($categories);
     }
 
@@ -35,7 +35,9 @@ class CategoryController extends Controller
      */
     public function show(int $id)
     {
-        $category = Category::findOrFail($id);
+         $category = Category::where('id', $id)
+                ->where('active', true)
+                ->firstOrFail();
         return new CategoryResource($category);
     }
 
@@ -55,7 +57,8 @@ class CategoryController extends Controller
     public function destroy(int $id)
     {
         $category = Category::findOrFail($id);
-        $category->delete();
+        $category->active = false;
+        $category->save();
         return response()->json(['message'=>'categorie supprimé'],200);
     }
 }

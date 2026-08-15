@@ -41,7 +41,6 @@ class StoreCarRequest extends FormRequest
             'niveauCarburant' => 'required|in:Plein,1/4,1/2,3/4,Vide',
             'domage' => 'string|max:255',
             'category_id' => 'required|exists:categories,id',
-            // 'active' => 'required|boolean',
         ];
     }
 

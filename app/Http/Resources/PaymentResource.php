@@ -21,6 +21,7 @@ class PaymentResource extends JsonResource
             'modePayment' => $this->modePayment,
             'amount' => $this->amount,
             'invoice' => new InvoiceResource($this->whenLoaded('invoice')),
+            'category'      => $this->invoice?->reservation?->car?->category?->name,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
