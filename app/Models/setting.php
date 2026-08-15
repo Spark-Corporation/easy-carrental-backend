@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -25,5 +26,17 @@ class Setting extends Model
             ['key' => $key],
             ['value' => $value]
         );
+    }
+
+    public static function getNumeric(string $key, $default = 0): float
+    {
+        $setting = static::where('key', $key)->first();
+        return $setting ? floatval($setting->value) : $default;
+    }
+
+    public static function getBoolean(string $key, $default = false): bool
+    {
+        $setting = static::where('key', $key)->first();
+        return $setting ? filter_var($setting->value, FILTER_VALIDATE_BOOLEAN) : $default;
     }
 }
