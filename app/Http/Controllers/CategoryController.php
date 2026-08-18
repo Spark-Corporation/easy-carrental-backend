@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CategoryResource;
 
 use App\Http\Requests\StoreCategoryRequest;
-use App\Models\category;
+
 use App\Models\Category as ModelsCategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,8 +17,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //$categories = Category::latest()->paginate(10);
-        $categories = Category::where('active', true)->orderBy('created_at', 'desc')->paginate(10);
+        //$categories = ModelsCategory::latest()->paginate(10);
+        $categories = ModelsCategory::where('active', true)->orderBy('created_at', 'desc')->paginate(10);
         return CategoryResource::collection($categories);
     }
 
@@ -27,7 +27,7 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        $category = Category::create($request->validated());
+        $category = ModelsCategory::create($request->validated());
         return new CategoryResource($category);
     }
     /**
@@ -35,7 +35,7 @@ class CategoryController extends Controller
      */
     public function show(int $id)
     {
-         $category = Category::where('id', $id)
+         $category = ModelsCategory::where('id', $id)
                 ->where('active', true)
                 ->firstOrFail();
         return new CategoryResource($category);
@@ -46,7 +46,7 @@ class CategoryController extends Controller
      */
     public function update(StoreCategoryRequest $request, int $id)
     {
-        $category = Category::findOrFail($id);
+        $category = ModelsCategory::findOrFail($id);
         $category->update($request->validated());
         return new CategoryResource($category);
     }
@@ -56,7 +56,7 @@ class CategoryController extends Controller
      */
     public function destroy(int $id)
     {
-        $category = Category::findOrFail($id);
+        $category = ModelsCategory::findOrFail($id);
         $category->active = false;
         $category->save();
         return response()->json(['message'=>'categorie supprimé'],200);

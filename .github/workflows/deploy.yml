@@ -1,0 +1,30 @@
+name: Deploy EasyCarRental Backend
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to N0C
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.NOC_HOST }}
+          username: ${{ secrets.NOC_USER }}
+          port: ${{ secrets.NOC_PORT }}
+          key: ${{ secrets.NOC_SSH_KEY }}
+          envs: GH_TOKEN
+          script: |
+            cd ~/test
+            git remote set-url origin https://$GH_TOKEN@github.com/Spark-Corporation/easy-carrental-backend.git
+            git checkout -- .
+            git pull origin main
+            php composer.phar install --no-dev --optimize-autoloader
+            php artisan migrate --force
+            php artisan config:cache
+            php artisan route:cache
+            php artisan optimize
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
