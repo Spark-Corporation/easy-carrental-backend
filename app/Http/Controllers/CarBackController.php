@@ -38,7 +38,7 @@ class CarBackController extends Controller
             $car = $reservation->car;
             if ($car) {
                 $car->kilometrage = $carBack->returnKm;
-                $car->niveauCarburant = $carBack->fuel_level;
+                $car->niveauCarburant = $carBack->fluelLevel;
                 $car->state = $carBack->state;
                 $car->status = 'Disponible';
                 $car->save();

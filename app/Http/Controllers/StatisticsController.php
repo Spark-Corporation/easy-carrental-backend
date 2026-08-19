@@ -8,7 +8,7 @@ use App\Models\Driver;
 use App\Models\Invoice;
 use App\Models\User;
 use App\Http\Resources\StatisticsResource;
-
+use App\Models\Payment;
 
 class StatisticsController extends Controller
 {
@@ -26,7 +26,7 @@ class StatisticsController extends Controller
             'availableDrivers' => Driver::query()->where('active', true)->where('status', 'Disponible')->count(),
             'unAvailableDrivers' => Driver::query()->where('active', true)->where('status', 'Indisponible')->count(),
             'busyDrivers' => Driver::query()->where('active', true)->where('status', 'Affecté')->count(),
-            'monthlyRevenue' => Invoice::query()->whereMonth('created_at', now()->month)
+            'monthlyRevenue' => Payment::query()->whereMonth('created_at', now()->month)
                 ->whereYear('created_at', now()->year)
                 ->sum('amount'),
 
