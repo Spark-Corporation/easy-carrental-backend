@@ -89,14 +89,14 @@ class Reservation extends Model
         });
     }
 
-    public function isActive()
-    {
-        $start = \Carbon\Carbon::parse($this->dateStart);
-        $end   = \Carbon\Carbon::parse($this->dateBack);
-        $now   = now();
+    // public function isActive()
+    // {
+    //     $start = \Carbon\Carbon::parse($this->dateStart);
+    //     $end   = \Carbon\Carbon::parse($this->dateBack);
+    //     $now   = now();
 
-        return $this->status === 'Validée' && $start->lte($now) && $end->gte($now);
-    }
+    //     return $this->status === 'Validée' && $start->lte($now) && $end->gte($now);
+    // }
 
     public function User()
     {

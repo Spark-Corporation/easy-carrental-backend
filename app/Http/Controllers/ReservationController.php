@@ -11,6 +11,25 @@ use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
+
+    // vérifie si une voiture est disponible sur une période donnée
+    protected function getConflictingReservation(int $carId, string $dateStart, string $dateBack, ?int $excludeReservationId = null): ?Reservation
+    {
+        return Reservation::where('car_id', $carId)
+            ->whereIn('status', ['Validée', 'En cours'])
+            ->when($excludeReservationId, function ($query) use ($excludeReservationId) {
+                $query->where('id', '!=', $excludeReservationId);
+            })
+            ->where(function ($query) use ($dateStart, $dateBack) {
+                $query->whereBetween('dateStart', [$dateStart, $dateBack])
+                    ->orWhereBetween('dateBack', [$dateStart, $dateBack])
+                    ->orWhere(function ($q) use ($dateStart, $dateBack) {
+                        $q->where('dateStart', '<=', $dateStart)
+                            ->where('dateBack', '>=', $dateBack);
+                    });
+            })
+            ->first();
+    }
     // Liste des réservations
     public function index()
     {
@@ -29,10 +48,22 @@ class ReservationController extends Controller
             $data['user_id'] = $user->id;
         }
 
+        // Vérification disponibilité
+        $conflict = $this->getConflictingReservation($data['car_id'], $data['dateStart'], $data['dateBack']);
+
+        if ($conflict) {
+            $dateStartFormatted = \Carbon\Carbon::parse($conflict->dateStart)->format('d/m/Y');
+            $dateBackFormatted = \Carbon\Carbon::parse($conflict->dateBack)->format('d/m/Y');
+
+            return response()->json([
+                'message' => "Veuillez choisir une autre voiture, cette voiture est déjà réservée du {$dateStartFormatted} au {$dateBackFormatted}."
+            ], 422);
+        }
+
         // Si c'est un admin, on garde le user_id envoyé dans la requête
         $reservation = Reservation::create($data);
 
-        if ($reservation->isActive()) {
+        if ($reservation->status == "En cours") {
             $reservation->car->status = 'Louée';
         } elseif (in_array($reservation->status, ['Terminée', 'Annulée'])) {
             $reservation->car->status = 'Disponible';
@@ -40,7 +71,7 @@ class ReservationController extends Controller
         $reservation->car->save();
 
         if ($reservation->driver) {
-            if ($reservation->isActive()&& $reservation->status == "Validée") {
+            if ($reservation->status == "En cours") {
                 $reservation->driver->status = 'Affecté';
             } elseif (in_array($reservation->status, ['Terminée', 'Annulée'])) {
                 $reservation->driver->status = 'Disponible';
@@ -88,9 +119,32 @@ class ReservationController extends Controller
     public function update(StoreReservationRequest $request, int $id)
     {
         $reservation = Reservation::findOrFail($id);
-        $reservation->update($request->validated());
+        $data = $request->validated();
+        // Vérification disponibilité (exclure la réservation en cours)
+        $conflict = $this->getConflictingReservation($data['car_id'], $data['dateStart'], $data['dateBack'], $id);
 
-        if ($reservation->isActive()) {
+        $statutsSansConflit = ['Annulée', 'Refusée'];
+
+        if (!in_array($data['status'], $statutsSansConflit)) {
+            $conflict = $this->getConflictingReservation(
+                $data['car_id'],
+                $data['dateStart'],
+                $data['dateBack'],
+                $id
+            );
+
+            if ($conflict) {
+                $dateStartFormatted = \Carbon\Carbon::parse($conflict->dateStart)->format('d/m/Y');
+                $dateBackFormatted = \Carbon\Carbon::parse($conflict->dateBack)->format('d/m/Y');
+
+                return response()->json([
+                    'message' => "Veuillez choisir une autre voiture, cette voiture est déjà réservée du {$dateStartFormatted} au {$dateBackFormatted}."
+                ], 422);
+            }
+        }
+        $reservation->update($data);
+
+        if ($reservation->status == "En cours") {
             $reservation->car->status = 'Louée';
         } elseif (in_array($reservation->status, ['Terminée', 'Annulée'])) {
             $reservation->car->status = 'Disponible';
@@ -98,7 +152,7 @@ class ReservationController extends Controller
         $reservation->car->save();
 
         if ($reservation->driver) {
-            if ($reservation->isActive()&& $reservation->status == "Validée") {
+            if ($reservation->status == "En cours") {
                 $reservation->driver->status = 'Affecté';
             } elseif (in_array($reservation->status, ['Terminée', 'Annulée'])) {
                 $reservation->driver->status = 'Disponible';
