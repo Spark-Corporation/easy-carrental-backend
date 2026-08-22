@@ -6,6 +6,8 @@ use App\Http\Resources\InvoiceResource;
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
+use App\Models\Historic;
+use Illuminate\Support\Facades\Auth;
 
 class InvoiceController extends Controller
 {
@@ -44,6 +46,14 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
         $invoice->update($request->validated());
+
+         //Historique
+        Historic::create([
+            'action'      => 'Mise à jour de facture',
+            'description' => "Facture #{$invoice->invoiceNumber} mise à jour pour la réservation #{$invoice->reservationNumber}, montant {$invoice->totalAmount}",
+            'user_id'     => Auth::id(),
+            'actionDate'  => now(),
+        ]);
         return new InvoiceResource($invoice);
     }
 
@@ -54,6 +64,13 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
         $invoice->delete();
+        //Historique
+        Historic::create([
+            'action'      => 'Suppression de facture',
+            'description' => "Facture #{$invoice->invoiceNumber} supprimée pour la réservation #{$invoice->reservationNumber}",
+            'user_id'     => Auth::id(),
+            'actionDate'  => now(),
+        ]);
         return response()->json(['message' => 'Facture supprimée avec succès'], 200);
     }
 }

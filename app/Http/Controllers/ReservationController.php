@@ -8,6 +8,8 @@ use App\Http\Resources\ReservationResource;
 use App\Models\Reservation;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use App\Models\Historic;
+use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
@@ -83,6 +85,15 @@ class ReservationController extends Controller
             'driverAmount'    => $reservation->driverAmount,
             'reductionAmount' => $reservation->reductionAmount ?? 0,
             'status'          => 'En attente',
+        ]);
+
+        //Historique
+        Historic::create([
+            // 'reservation_id' => $reservation->id,
+            'action'         => 'réservation',
+            'description'    => "Réservation #{$reservation->reservationNumber} enrégistrée pour la voiture #{$reservation->car_id}, du {$reservation->dateStart} au {$reservation->dateBack}, statut {$reservation->status}",
+            'user_id'        => Auth::id(),
+            'actionDate'  => now(),
         ]);
 
         return response()->json([
@@ -168,6 +179,14 @@ class ReservationController extends Controller
                 'status'          => $invoice->status ?? "En attente",
             ]);
         }
+
+        Historic::create([
+            // 'reservation_id' => $reservation->id,
+            'action'         => 'Mise à jour de réservation',
+            'description'    => "Réservation #{$reservation->reservationNumber} mise à jour : voiture #{$reservation->car_id}, du {$reservation->dateStart} au {$reservation->dateBack}, statut {$reservation->status}",
+            'user_id'        => Auth::id(),
+            'actionDate'  => now(),
+        ]);
         return response()->json([
             'reservation' => new ReservationResource($reservation),
             'invoice'     => $invoice
@@ -179,6 +198,13 @@ class ReservationController extends Controller
     {
         $reservation = Reservation::findOrFail($id);
         $reservation->delete();
+        Historic::create([
+            'reservation_id' => $reservation->id,
+            'action'         => 'Suppression de réservation',
+            'description'    => "Réservation #{$reservation->reservationNumber} supprimée",
+            'user_id'        => Auth::id(),
+            'actionDate'  => now(),
+        ]);
         return response()->json(['message' => 'Réservation supprimée avec succès'], 200);
     }
 
@@ -250,6 +276,13 @@ class ReservationController extends Controller
 
         $reservation->status = 'Annulée';
         $reservation->save();
+        Historic::create([
+            // 'reservation_id' => $reservation->id,
+            'action'         => 'Annulation de réservation',
+            'description'    => "Réservation #{$reservation->reservationNumber} annulée par le client",
+            'user_id'        => Auth::id(),
+            'actionDate'  => now(),
+        ]);
 
         if ($reservation->driver) {
             $reservation->driver->status = 'Disponible';

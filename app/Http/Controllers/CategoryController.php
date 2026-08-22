@@ -9,6 +9,8 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Models\Category as ModelsCategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Historic;
 
 class CategoryController extends Controller
 {
@@ -28,6 +30,14 @@ class CategoryController extends Controller
     public function store(StoreCategoryRequest $request)
     {
         $category = ModelsCategory::create($request->validated());
+
+        //Historique
+        Historic::create([
+            'action'      => 'Enrégistrement de catégorie',
+            'description' => "Catégorie #{$category->id} créée : {$category->name}",
+            'user_id'     => Auth::id(),
+           'actionDate'  => now(),
+        ]);
         return new CategoryResource($category);
     }
     /**
@@ -48,6 +58,14 @@ class CategoryController extends Controller
     {
         $category = ModelsCategory::findOrFail($id);
         $category->update($request->validated());
+
+        //Historique
+        Historic::create([
+            'action'      => 'Mise à jour de catégorie',
+            'description' => "Catégorie #{$category->id} mise à jour : {$category->name}",
+            'user_id'     => Auth::id(),
+            'actionDate'  => now(),
+        ]);
         return new CategoryResource($category);
     }
 
@@ -59,6 +77,13 @@ class CategoryController extends Controller
         $category = ModelsCategory::findOrFail($id);
         $category->active = false;
         $category->save();
+        //Historique
+        Historic::create([
+            'action'      => 'Suppression de catégorie',
+            'description' => "Catégorie #{$category->id} supprimée (désactivée) : {$category->name}",
+            'user_id'     => Auth::id(),
+            'actionDate'  => now(),
+        ]);
         return response()->json(['message'=>'categorie supprimé'],200);
     }
 }

@@ -6,6 +6,8 @@ use App\Http\Requests\StorePanneRequest ;
 use App\Models\Panne;
 use Illuminate\Http\Request;
 use App\Http\Resources\PanneResource;
+use Illuminate\Support\Facades\Auth;
+use  App\Models\Historic;
 
 class PanneController extends Controller
 {
@@ -31,6 +33,13 @@ class PanneController extends Controller
             $car->status = 'En panne';
             $car->save();
         }
+        // Historique
+        Historic::create([
+            'action'      => 'Enrégistrement de panne',
+            'description' => "Panne #{$panne->id} enregistrée pour la voiture #{$car->id} : {$panne->description}, priorité {$panne->priority}",
+            'user_id'     => Auth::id(),
+           'actionDate'  => now(),
+        ]);
         return new PanneResource($panne);
     }
 
@@ -55,6 +64,13 @@ class PanneController extends Controller
             $panne->car->status = 'Disponible';
             $panne->car->save();
         }
+        //Historique
+        Historic::create([
+            'action'      => 'Mise à jour de panne',
+            'description' => "Panne #{$panne->id} mise à jour pour la voiture #{$panne->car->id} : statut {$panne->status}, montant {$panne->panneAmount}",
+            'user_id'     => Auth::id(),
+            'actionDate'  => now(),
+        ]);
         return new PanneResource($panne);
     }
 
@@ -65,6 +81,13 @@ class PanneController extends Controller
     {
         $panne = Panne::findOrFail($id);
         $panne->delete();
+        //Historique
+        Historic::create([
+            'action'      => 'Suppression de panne',
+            'description' => "Panne #{$panne->id} supprimée pour la voiture #{$panne->car_id}",
+            'user_id'     => Auth::id(),
+            'actionDate'  => now(),
+        ]);
         return response()->Json(['message'=>'panne supprimé'],200);
     }
 }

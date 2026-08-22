@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\carBack;
 use App\Http\Resources\CarBackResource;
 use App\Http\Requests\StoreCarBackRequest;
+use App\Models\Historic;
 
 class CarBackController extends Controller
 {
@@ -43,6 +45,15 @@ class CarBackController extends Controller
                 $car->status = 'Disponible';
                 $car->save();
             }
+
+            //Historique
+        Historic::create([
+            // 'reservation_id' => $reservation->id,
+            'action'         => 'Retour du véhicule',
+            'description'    => "Retour de la réservation #{$reservation->reservationNumber} : Km {$carBack->returnKm}, Carburant {$carBack->fluelLevel}, État {$carBack->state}",
+            'user_id'        => Auth::id(),
+            'actionDate'  => now(),
+        ]);
         }
 
         return new CarBackResource($carBack);

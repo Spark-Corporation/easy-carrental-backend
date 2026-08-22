@@ -6,6 +6,8 @@ use App\Http\Resources\PaymentResource;
 use App\Http\Requests\StorePaymentRequest;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use App\Models\Historic;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
@@ -31,6 +33,13 @@ class PaymentController extends Controller
             $invoice->status = 'Payé';
             $invoice->save();
         }
+         //Historique
+        Historic::create([
+            'action'      => 'Paiement',
+            'description' => "Paiement #{$payment->paymentNumber} enregistré pour la facture #{$invoice->invoiceNumber} : montant {$payment->amount}, mode {$payment->modePayment}",
+            'user_id'     => Auth::id(),
+           'actionDate'  => now(),
+        ]);
         return new PaymentResource($payment);
     }
 
@@ -51,6 +60,13 @@ class PaymentController extends Controller
     {
         $payment = Payment::findOrFail($id);
         $payment->update($request->validated());
+        //Historique
+        Historic::create([
+            'action'      => 'Mise à jour de paiement',
+            'description' => "Paiement #{$payment->paymentNumber} mis à jour : montant {$payment->amount}, mode {$payment->modePayment}",
+            'user_id'     => Auth::id(),
+            'actionDate'  => now(),
+        ]);
         return new PaymentResource($payment);
     }
 
@@ -61,6 +77,13 @@ class PaymentController extends Controller
     {
         $payment = Payment::findOrFail($id);
         $payment->delete();
+        //Historique
+        Historic::create([
+            'action'      => 'Suppression de paiement',
+            'description' => "Paiement #{$payment->paymentNumber} supprimé",
+            'user_id'     => Auth::id(),
+            'actionDate'  => now(),
+        ]);
         return response()->json(['message' => 'Paiement supprimé avec succès'], 200);
     }
 }

@@ -6,6 +6,8 @@ use App\Http\Requests\StoreDriverRequest;
 use App\Http\Resources\DriverResource;
 use App\Models\Driver;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Historic;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class DriverController extends Controller
@@ -42,6 +44,14 @@ class DriverController extends Controller
             $data['photo'] = $path;
         }
         $driver = Driver::create($data);
+
+        //Historique
+        Historic::create([
+            'action'      => 'Création de conducteur',
+            'description' => "conducteur #{$driver->id} créé : {$driver->nom} {$driver->prenom}, téléphone {$driver->telephone}",
+            'user_id'     => Auth::id(),
+            'actionDate'  => now(),
+        ]);
         return new DriverResource($driver);
     }
 
@@ -71,6 +81,13 @@ class DriverController extends Controller
             $validated['photo'] = $path;
         }
         $driver->update($validated);
+        //Historique
+        Historic::create([
+            'action'      => 'Mise à jour de conducteur',
+            'description' => "Conducteur #{$driver->id} mis à jour : {$driver->nom} {$driver->prenom}, téléphone {$driver->telephone}",
+            'user_id'     => Auth::id(),
+            'actionDate'  => now(),
+        ]);
 
 
         return new DriverResource($driver);
@@ -84,6 +101,14 @@ class DriverController extends Controller
         $driver = Driver::findOrFail($id);
         $driver->active = false;
         $driver->save();
+
+        //Historique
+        Historic::create([
+            'action'      => 'Suppression de chauffeur',
+            'description' => "Chauffeur #{$driver->id} supprimé (désactivé) : {$driver->nom} {$driver->prenom}, téléphone {$driver->telephone}",
+            'user_id'     => Auth::id(),
+            'actionDate'  => now(),
+        ]);
         return response()->Json(['message' => 'Chauffeur supprimé'], 200);
     }
 }

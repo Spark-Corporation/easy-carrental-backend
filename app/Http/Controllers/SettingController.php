@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use App\Models\Historic;
+use Illuminate\Support\Facades\Auth;
 
 class SettingController extends Controller
 {
@@ -34,10 +36,17 @@ class SettingController extends Controller
 
         $setting = Setting::set($key, $request->value);
 
+        //Historique
+        Historic::create([
+            'action'      => 'Mise à jour de paramètre',
+            'description' => "Paramètre '{$key}' mis à jour avec la valeur '{$request->value}'",
+            'user_id'     => Auth::id(),
+            'actionDate'  => now(),
+        ]);
+
         return response()->json([
             'message' => 'Paramètre mis à jour avec succès',
             'setting' => $setting
         ]);
     }
 }
-

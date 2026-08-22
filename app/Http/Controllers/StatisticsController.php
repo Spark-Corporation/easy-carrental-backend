@@ -20,8 +20,8 @@ class StatisticsController extends Controller
             'totalReservations' => Reservation::query()->count(),
             'totalClients' => User::query()->where('active', true)->where('role', 'client')->count(),
             'totalAdmins' => User::query()->where('active', true)->where('role', 'admin')->count(),
-            'activeReservations' => Reservation::all()
-                ->filter(fn($r) => $r->computed_status === 'En cours')
+            'activeReservations' => Reservation::query()
+                ->where('status','En cours')
                 ->count(),
             'availableDrivers' => Driver::query()->where('active', true)->where('status', 'Disponible')->count(),
             'unAvailableDrivers' => Driver::query()->where('active', true)->where('status', 'Indisponible')->count(),
@@ -36,7 +36,7 @@ class StatisticsController extends Controller
             'carsBroken' => Car::query()->where('active', true)->where('status', 'En panne')->count(),
             'carsInRepair' => Car::query()->where('active', true)->where('status', 'En réparation')->count(),
 
-            'waitingForDriver' => Reservation::query()->whereIn('status',['En attente','Validée'])
+            'waitingForDriver' => Reservation::query()->whereIn('status', ['En attente', 'Validée'])
                 ->whereNull('driver_id')
                 ->where('driverAmount', '>', 0)
                 ->count(),
@@ -53,5 +53,37 @@ class StatisticsController extends Controller
         ];
 
         return new StatisticsResource($data);
+    }
+
+    public function topCars()
+    {
+        $vehicles = Reservation::query()
+            ->join('invoices', 'reservations.id', '=', 'invoices.reservation_id')
+            ->selectRaw('reservations.car_id,
+                     COUNT(reservations.id) as reservations_count,
+                     SUM(CASE WHEN reservations.status = "Terminée" THEN 1 ELSE 0 END) as completed_count,
+                     SUM(invoices.totalAmount) as revenue')
+            ->groupBy('reservations.car_id')
+            ->orderByDesc('reservations_count')
+            ->take(5)
+            ->get();
+
+        $vehicles = $vehicles->map(function ($v) {
+            $car = Car::with('category')->find($v->car_id);
+
+            return [
+                'id'                 => $car->id,
+                'photo_url'       => $car->photo ? asset('storage/' . $car->photo) : null,
+                'mark'               => $car->mark,
+                'model'              => $car->model,
+                'imatriculation'              => $car->imatriculation,
+                'category'           => $car->category->name ?? null,
+                'reservations'       => $v->reservations_count,
+                'locationsTerminees' => $v->completed_count,
+                'revenus'            => $v->revenue,
+            ];
+        });
+
+        return response()->json($vehicles);
     }
 }

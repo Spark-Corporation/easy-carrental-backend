@@ -65,6 +65,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::apiResource('invoices', InvoiceController::class)->except(['show']);
     Route::apiResource('payments', PaymentController::class)->except(['store']);
     Route::get('/statistics', [StatisticsController::class, 'index']);
+    Route::get('/statistics/topCars', [StatisticsController::class, 'topCars']);
     Route::get('/settings', [SettingController::class, 'index']);
     Route::get('/settings/{key}', [SettingController::class, 'show']);
     Route::put('/settings/{key}', [SettingController::class, 'update']);

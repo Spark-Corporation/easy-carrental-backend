@@ -53,6 +53,6 @@ class HistoricController extends Controller
     {
         $historic = Historic::findOrFail($id);
         $historic->delete();
-        return response()->json(["message"=>"Historique supprimé",200]);
+        return response()->json(["message"=>"Historique supprimé"],200);
     }
 }
