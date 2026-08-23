@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDriverRequest;
 use App\Http\Resources\DriverResource;
+use App\Http\Resources\DriverHistoricResource;
 use App\Models\Driver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -62,8 +63,8 @@ class DriverController extends Controller
     public function show(int $id)
     {
         $driver = driver::where('id', $id)
-                ->where('active', true)
-                ->firstOrFail();
+            ->where('active', true)
+            ->firstOrFail();
         return new DriverResource($driver);
     }
 
@@ -84,7 +85,7 @@ class DriverController extends Controller
         //Historique
         Historic::create([
             'action'      => 'Mise à jour de conducteur',
-            'description' => "Conducteur #{$driver->id} mis à jour : {$driver->nom} {$driver->prenom}, téléphone {$driver->telephone}",
+            'description' => "Conducteur #{$driver->id} mis à jour : {$driver->lastname} {$driver->firstname}, téléphone {$driver->telephone}",
             'user_id'     => Auth::id(),
             'actionDate'  => now(),
         ]);
@@ -110,5 +111,23 @@ class DriverController extends Controller
             'actionDate'  => now(),
         ]);
         return response()->Json(['message' => 'Chauffeur supprimé'], 200);
+    }
+
+    public function allHistoric()
+    {
+        $drivers = Driver::where('active', true)
+            ->with(['reservations.car', 'reservations.user', 'reservations.carBack', 'reservations.driver'])
+            ->get();
+
+        return $drivers->map(function ($driver) {
+            return [
+                'driver' => [
+                    'id'     => $driver->id,
+                    'lastname'    => $driver->lastname,
+                    'firstname' => $driver->firstname,
+                ],
+                'reservations' => DriverHistoricResource::collection($driver->reservations),
+            ];
+        });
     }
 }

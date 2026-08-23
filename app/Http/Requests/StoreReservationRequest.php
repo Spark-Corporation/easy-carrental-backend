@@ -31,6 +31,7 @@ class StoreReservationRequest extends FormRequest
             'driverAmount'   => 'nullable|numeric|min:0',
             'type'         => 'required|in:reservation,leasing',
             'status'      => 'nullable|in:En attente,Validée,Annulée,Refusée,En cours,Terminée',
+            'startKm'       => 'nullable|numeric|min:0',
         ];
     }
 
@@ -53,6 +54,8 @@ class StoreReservationRequest extends FormRequest
             'type.in'             => 'Le type de réservation doit être "reservation" ou "leasing".',
             'status.required'     => 'Le statut est obligatoire.',
             'status.in'           => 'Le statut doit être "En attente", "validé", "annulée", "refusée", "en cours" ou "terminée".',
+            'startKm.numeric'     => 'Le kilométrage de départ doit être un nombre.',
+            'startKm.min'         => 'Le kilométrage de départ doit être supérieur ou égal à 0.',
         ];
     }
 }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->datetime('dateStart')->default(now());
             $table->datetime('dateBack')->nullable();
             $table->decimal('driverAmount', 10, 2)->nullable();
+            $table->decimal('startKm', 10, 2)->nullable();
             $table->enum('type', ['reservation', 'leasing'])->default('reservation');
             $table->enum('status', ['En attente', 'Validée', 'Annulée', 'Refusée', 'En cours', 'Terminée'])->default('En attente');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

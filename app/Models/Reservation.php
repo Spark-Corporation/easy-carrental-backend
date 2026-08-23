@@ -19,7 +19,7 @@ use App\Models\Setting;
 
 class Reservation extends Model
 {
-    protected $fillable = ['id','reservationNumber', 'user_id', 'car_id', 'driver_id', 'dateStart', 'dateBack', 'driverAmount', 'type', 'status'];
+    protected $fillable = ['id','reservationNumber', 'user_id', 'car_id', 'driver_id', 'dateStart', 'dateBack', 'driverAmount', 'type', 'status','startKm'];
 
     public function calculateDriverAmount(float $driverDailyRate): float
     {

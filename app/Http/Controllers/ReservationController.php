@@ -65,6 +65,11 @@ class ReservationController extends Controller
         // Si c'est un admin, on garde le user_id envoyé dans la requête
         $reservation = Reservation::create($data);
 
+        if ($reservation->status === "En cours" && $reservation->car) {
+            $reservation->startKm = $reservation->car->kilometrage;
+            $reservation->save();
+        }
+
         if ($reservation->status == "En cours") {
             $reservation->car->status = 'Louée';
         } elseif (in_array($reservation->status, ['Terminée', 'Annulée'])) {
@@ -154,6 +159,11 @@ class ReservationController extends Controller
             }
         }
         $reservation->update($data);
+
+        if ($reservation->status === "En cours" && $reservation->car && !$reservation->startKm) {
+            $reservation->startKm = $reservation->car->kilometrage;
+            $reservation->save();
+        }
 
         if ($reservation->status == "En cours") {
             $reservation->car->status = 'Louée';

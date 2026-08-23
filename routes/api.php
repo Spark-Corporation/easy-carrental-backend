@@ -52,6 +52,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::get('/drivers/available', [DriverController::class, 'availableDrivers']);
     Route::get('/cars/available', [CarController::class, 'availableCars']);
     Route::apiResource('categories', CategoryController::class)->except(['index']);
+    Route::get('/drivers/historic', [DriverController::class, 'allHistoric']);
     Route::apiResource('drivers', DriverController::class);
     Route::apiResource('pannes', PanneController::class);
     // Route::apiResource('cars', CarController::class)->except(['index', 'show']);

@@ -17,7 +17,7 @@ class CarController extends Controller
      */
     public function index()
     {
-        $cars = Car::where('active', true)->with('category')->OrderBy('created_at', 'desc')->paginate(15);
+        $cars = Car::where('active', true) ->where('status', '!=', 'En panne')->with('category')->OrderBy('created_at', 'desc')->paginate(15);
         return CarResource::collection($cars);
     }
 
@@ -26,7 +26,7 @@ class CarController extends Controller
         $cars = Car::with('category')
             ->where('status', 'Disponible')
             ->where('active', true)
-            ->where('status',!"En panne")
+            // ->where('status', '!=', 'En panne')
             ->orderBy('created_at', 'desc')
             ->paginate(15);
 
@@ -127,7 +127,7 @@ class CarController extends Controller
         // Mettre la voiture en inactive
         $car->active = false;
         $car->save();
-        // 🔹 Historique avec dateAction
+        //Historique avec dateAction
         Historic::create([
             'action'      => 'Suppression de vehicule',
             'description' => "Vehicule #{$car->id} supprimée (désactivée) : {$car->mark} {$car->model}, immatriculation {$car->imatriculation}",

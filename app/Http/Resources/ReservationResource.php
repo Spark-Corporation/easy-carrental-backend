@@ -56,6 +56,7 @@ class ReservationResource extends JsonResource
             'invoice'        => new InvoiceResource($this->whenLoaded('invoice')),
 
             'totalAmount' => $this->invoice?->totalAmount,
+            'startKm'   => $this->startKm,
 
             // Champs calculés (estimate)
             'days'            => $days,

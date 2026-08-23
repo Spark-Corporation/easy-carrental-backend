@@ -46,14 +46,20 @@ class CarBackController extends Controller
                 $car->save();
             }
 
+            if ($reservation->driver) {
+                $reservation->driver->status = 'Disponible';
+                $reservation->driver->save();
+            }
+
+
             //Historique
-        Historic::create([
-            // 'reservation_id' => $reservation->id,
-            'action'         => 'Retour du véhicule',
-            'description'    => "Retour de la réservation #{$reservation->reservationNumber} : Km {$carBack->returnKm}, Carburant {$carBack->fluelLevel}, État {$carBack->state}",
-            'user_id'        => Auth::id(),
-            'actionDate'  => now(),
-        ]);
+            Historic::create([
+                // 'reservation_id' => $reservation->id,
+                'action'         => 'Retour du véhicule',
+                'description'    => "Retour de la réservation #{$reservation->reservationNumber} : Km {$carBack->returnKm}, Carburant {$carBack->fluelLevel}, État {$carBack->state}",
+                'user_id'        => Auth::id(),
+                'actionDate'  => now(),
+            ]);
         }
 
         return new CarBackResource($carBack);
