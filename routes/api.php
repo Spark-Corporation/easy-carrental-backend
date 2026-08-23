@@ -25,7 +25,7 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('loginAdmin', [AuthController::class, 'loginAdmin']);
 Route::post('loginClient', [AuthController::class, 'loginClient']);
 Route::post('/reservations/estimate', [ReservationController::class, 'estimate']);
-Route::get('/cars', [CarController::class, 'index']);
+Route::get('/cars', [CarController::class, 'publicIndex']);
 Route::get('/categories', [CategoryController::class, 'index']);
 
 // Routes réservées aux clients connectés
@@ -56,6 +56,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::apiResource('drivers', DriverController::class);
     Route::apiResource('pannes', PanneController::class);
     // Route::apiResource('cars', CarController::class)->except(['index', 'show']);
+    Route::get('/admin/cars', [CarController::class, 'index']);
     Route::put('/cars/{car}', [CarController::class, 'update']);
     Route::post('/cars', [CarController::class, 'store']);
     Route::delete('/cars/{car}', [CarController::class, 'destroy']);

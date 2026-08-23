@@ -15,11 +15,29 @@ class CarController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function publicIndex()
     {
-        $cars = Car::where('active', true) ->where('status', '!=', 'En panne')->with('category')->OrderBy('created_at', 'desc')->paginate(15);
+        // Les utilisateurs publics voient uniquement les voitures actives non en panne
+        $cars = Car::where('active', true)
+            ->where('status', '!=', 'En panne')
+            ->with('category')
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+
         return CarResource::collection($cars);
     }
+
+    public function index()
+    {
+        // L’admin voit toutes les voitures (y compris celles en panne)
+        $cars = Car::where('active', true)
+            ->with('category')
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+
+        return CarResource::collection($cars);
+    }
+
 
     public function availableCars()
     {
