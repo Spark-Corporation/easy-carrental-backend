@@ -19,32 +19,32 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         $userId = $this->route('user') instanceof \App\Models\User
-        ? $this->route('user')->id
-        : $this->route('user');
+            ? $this->route('user')->id
+            : $this->route('user');
 
-    return [
-        'lastname' => [
-            'required',
-            'string',
-            'max:255',
-            Rule::unique('users')
-                ->where(fn ($query) => $query->where('firstname', $this->input('firstname')))
-                ->ignore($userId, 'id'),
-        ],
-        'firstname'  => 'required|string|max:255',
-        'email' => [
-            'required',
-            'string',
-            'email',
-            'max:255',
-            Rule::unique('users', 'email')->ignore($userId, 'id'),
-        ],
+        return [
+            'lastname' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('users')
+                    ->where(fn($query) => $query->where('firstname', $this->input('firstname')))
+                    ->ignore($userId, 'id'),
+            ],
+            'firstname'  => 'required|string|max:255',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($userId, 'id'),
+            ],
             'password'   => 'sometimes|nullable|string|min:8',
             'type'       => 'nullable|in:physique,morale',
             'pieceType'  => 'required|string|max:255',
             'pieceNumber' => 'required|string|max:50',
             'address'     => 'required|string|max:255',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'photo' => 'required|image|mimes:jpg,jpeg,png,avif,webp|max:2048',
             'phone'      => 'required|string|max:20',
             'active'     => 'nullable|boolean',
             'role'       => 'required|string|max:50',
@@ -68,6 +68,13 @@ class UpdateUserRequest extends FormRequest
             'address.required'    => 'L\'adresse est obligatoire.',
             'phone.required'      => 'Le numéro de téléphone est obligatoire.',
             'role.required'       => 'Le rôle est obligatoire.',
+
+            // Photo
+            'photo.required'  => 'La photo est obligatoire.',
+            'photo.image'     => 'Le fichier doit être une image.',
+            'photo.mimes'     => 'La photo doit être au format jpg, jpeg ou png.',
+            'photo.max'       => 'La photo ne doit pas dépasser 2 Mo.',
+
         ];
     }
 }

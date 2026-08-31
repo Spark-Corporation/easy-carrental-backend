@@ -37,7 +37,7 @@ class StoreCarBackRequest extends FormRequest
                 'before_or_equal:now',
                 function ($attribute, $value, $fail) {
                     if ($this->reservation_id && $value) {
-                        $reservation = Reservation::find($this->reservation_id,['*']);
+                        $reservation = Reservation::find($this->reservation_id, ['*']);
 
                         if ($reservation && $reservation->dateStart) {
                             $returnDate = \Carbon\Carbon::parse($value);
@@ -66,6 +66,9 @@ class StoreCarBackRequest extends FormRequest
             'state.required'          => 'L’état du véhicule est obligatoire.',
             'damage.string'           => 'Les dommages doivent être une chaîne de caractères.',
             'comment.string'          => 'Le commentaire doit être une chaîne de caractères.',
+
+            'returnDate.date'             => 'La date de retour doit être une date valide.',
+            'returnDate.before_or_equal'  => 'La date de retour ne peut pas être dans le futur.',
         ];
     }
 }

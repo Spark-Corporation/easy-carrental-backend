@@ -71,7 +71,7 @@ class Invoice extends Model
 
                 if ($startDate && $endDate && $endDate->greaterThanOrEqualTo($startDate)) {
                     $days = $startDate->diffInDays($endDate);
-                    $days = round($days);
+                    // $days = round($days);
                 }
 
                 $dayAmount = (float) ($invoice->reservation->car->dayAmount ?? 0);

@@ -31,7 +31,7 @@ class Reservation extends Model
 
             if ($endDate->greaterThanOrEqualTo($startDate)) {
                 $days = $startDate->diffInDays($endDate);
-                $days = round($days);
+                // $days = round($days);
             }
         }
 

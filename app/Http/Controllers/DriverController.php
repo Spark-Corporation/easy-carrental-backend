@@ -49,7 +49,7 @@ class DriverController extends Controller
         //Historique
         Historic::create([
             'action'      => 'Création de conducteur',
-            'description' => "conducteur #{$driver->id} créé : {$driver->nom} {$driver->prenom}, téléphone {$driver->telephone}",
+            'description' => "conducteur #{$driver->id} créé : {$driver->lastname} {$driver->firstname}, téléphone {$driver->phone}",
             'user_id'     => Auth::id(),
             'actionDate'  => now(),
         ]);

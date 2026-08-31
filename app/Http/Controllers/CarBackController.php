@@ -8,6 +8,7 @@ use App\Models\carBack;
 use App\Http\Resources\CarBackResource;
 use App\Http\Requests\StoreCarBackRequest;
 use App\Models\Historic;
+use App\Models\Setting;
 
 class CarBackController extends Controller
 {
@@ -31,6 +32,7 @@ class CarBackController extends Controller
         // Récupérer la réservation liée
         $reservation = $carBack->reservation;
 
+
         if ($reservation) {
             $reservation->status = 'Terminée';
             $reservation->dateBack = $carBack->returnDate;
@@ -51,12 +53,43 @@ class CarBackController extends Controller
                 $reservation->driver->save();
             }
 
+            //Recalcul du montant basé sur dayAmount
+            $startDate = \Carbon\Carbon::parse($reservation->dateStart);
+            $endDate   = \Carbon\Carbon::parse($carBack->returnDate);
+            $days = $startDate->diffInDays($endDate) ?: 1;
+
+            $dayAmount = $reservation->car->dayAmount ?? 0;
+            $baseAmount = $days * $dayAmount;
+
+            $reductionRate   = Setting::get('reductionRate', 0);
+            $tvaRate         = Setting::get('tvaRate', 0);
+            $driverDailyRate = Setting::get('driverDailyRate', 0);
+
+            $reductionAmount = $baseAmount * $reductionRate;
+            $driverAmount    = $reservation->type === 'leasing' ? $driverDailyRate * $days : 0;
+
+            $netPrice   = $baseAmount - $reductionAmount + $driverAmount;
+            $tvaAmount  = $netPrice * $tvaRate;
+            $totalAmount = $netPrice + $tvaAmount;
+
+        
+            // Mise à jour facture
+            if ($reservation->invoice) {
+                $reservation->invoice->update([
+                    'driverAmount'    => $driverAmount,
+                    'reductionAmount' => $reductionAmount,
+                    'tvaAmount'       => $tvaAmount,
+                    'totalAmount'     => $totalAmount,
+                    'status'          => 'En attente',
+                ]);
+            }
+
 
             //Historique
             Historic::create([
                 // 'reservation_id' => $reservation->id,
                 'action'         => 'Retour du véhicule',
-                'description'    => "Retour de la réservation #{$reservation->reservationNumber} : Km {$carBack->returnKm}, Carburant {$carBack->fluelLevel}, État {$carBack->state}",
+                'description'    => "Retour de la réservation #{$reservation->reservationNumber} : Km {$carBack->returnKm}, Carburant {$carBack->fluelLevel}, État {$carBack->state} , Montant recalculé {$totalAmount}",
                 'user_id'        => Auth::id(),
                 'actionDate'  => now(),
             ]);

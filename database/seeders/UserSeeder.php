@@ -50,7 +50,7 @@ class UserSeeder extends Seeder
             'pieceNumber'   => '123456789',
             'address'     => 'Atakpamé',
             'role'        => 'client',
-            'active'      => false,
+            'active'      => true,
         ]);
 
         User::create([

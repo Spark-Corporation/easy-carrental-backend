@@ -69,7 +69,7 @@ class StatisticsController extends Controller
             ->selectRaw('reservations.car_id,
                      COUNT(reservations.id) as reservations_count,
                      SUM(CASE WHEN reservations.status = "Terminée" THEN 1 ELSE 0 END) as completed_count,
-                     SUM(invoices.totalAmount) as revenue')
+                     SUM(CASE WHEN reservations.status = "Terminée" THEN invoices.totalAmount ELSE 0 END) as revenue')
             ->groupBy('reservations.car_id')
             ->orderByDesc('reservations_count')
             ->take(5)

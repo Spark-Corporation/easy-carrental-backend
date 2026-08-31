@@ -42,7 +42,8 @@ class StoreUserRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('users')->where(fn ($query) =>
+                Rule::unique('users')->where(
+                    fn($query) =>
                     $query->where('firstname', $this->firstname)
                 ),
             ],
@@ -53,7 +54,7 @@ class StoreUserRequest extends FormRequest
             'pieceType'  => 'required|string|max:255',
             'pieceNumber' => 'required|string|max:50',
             'address'    => 'required|string|max:255',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'photo' => 'required|image|mimes:jpg,jpeg,png,avif,webp|max:2048',
             'phone'      => 'required|string|max:20',
             // 'active'     => 'boolean',
             'role'       => 'required|string|max:50',
@@ -76,6 +77,13 @@ class StoreUserRequest extends FormRequest
             'address.required'    => 'L\'adresse est obligatoire.',
             'phone.required'      => 'Le numéro de téléphone est obligatoire.',
             'role.required'       => 'Le rôle est obligatoire.',
+
+            // Photo
+            'photo.required'  => 'La photo est obligatoire.',
+            'photo.image'     => 'Le fichier doit être une image.',
+            'photo.mimes'     => 'La photo doit être au format jpg, jpeg ou png.',
+            'photo.max'       => 'La photo ne doit pas dépasser 2 Mo.',
+
         ];
     }
 }

@@ -18,14 +18,15 @@ class DriverHistoricResource extends JsonResource
             'dateStart'      => $this->dateStart,
             'dateBack'      => $this->dateBack,
             'imatriculation'       => $this->car ? $this->car->imatriculation : null,
-            'mark'       => $this->car ? $this->car->mark: null,
+            'mark'       => $this->car ? $this->car->mark : null,
             'model'       => $this->car ? $this->car->model : null,
             'client' => $this->user ? $this->user->lastname . ' ' . $this->user->firstname : null,
             'startKm'         => $this->startKm,
-           'returnKm'        => $this->carBack?->returnKm ?? null,
-            'distance'        => ($this->carBack?->returnKm && $this->car?->kilometrage)
-                                 ? $this->carBack->returnKm - $this->car->kilometrage
-                                 : null,
+            'returnKm'        => $this->carBack?->returnKm ?? null,
+            'distance' => ($this->carBack?->returnKm && $this->startKm)
+                ? $this->carBack->returnKm - $this->startKm
+                : null,
+
             'status'    => $this->status,
         ];
     }

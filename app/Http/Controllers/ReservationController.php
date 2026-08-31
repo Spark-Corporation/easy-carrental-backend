@@ -65,10 +65,29 @@ class ReservationController extends Controller
         // Si c'est un admin, on garde le user_id envoyé dans la requête
         $reservation = Reservation::create($data);
 
-        if ($reservation->status === "En cours" && $reservation->car) {
-            $reservation->startKm = $reservation->car->kilometrage;
-            $reservation->save();
+        if ($reservation->status === "En cours") {
+            $dateStart = \Carbon\Carbon::parse($reservation->dateStart);
+
+            if ($dateStart->isFuture()) {
+                return response()->json([
+                    'message' => "Impossible de démarrer la réservation avant la date prévue ({$reservation->dateStart})."
+                ], 422);
+            }
+
+            if ($dateStart->lt(now())) {
+                $reservation->dateStart = now();
+                $reservation->save();
+            }
+
+            if ($reservation->car) {
+                $reservation->startKm = $reservation->car->kilometrage;
+            }
         }
+
+        // if ($reservation->status === "En cours" && $reservation->car) {
+        //     $reservation->startKm = $reservation->car->kilometrage;
+        //     $reservation->save();
+        // }
 
         if ($reservation->status == "En cours") {
             $reservation->car->status = 'Louée';
@@ -94,7 +113,6 @@ class ReservationController extends Controller
 
         //Historique
         Historic::create([
-            // 'reservation_id' => $reservation->id,
             'action'         => 'réservation',
             'description'    => "Réservation #{$reservation->reservationNumber} enrégistrée pour la voiture #{$reservation->car_id}, du {$reservation->dateStart} au {$reservation->dateBack}, statut {$reservation->status}",
             'user_id'        => Auth::id(),
@@ -160,10 +178,32 @@ class ReservationController extends Controller
         }
         $reservation->update($data);
 
-        if ($reservation->status === "En cours" && $reservation->car && !$reservation->startKm) {
-            $reservation->startKm = $reservation->car->kilometrage;
-            $reservation->save();
+         if ($reservation->status === "En cours") {
+            $dateStart = \Carbon\Carbon::parse($reservation->dateStart);
+
+            if ($dateStart->isFuture()) {
+                return response()->json([
+                    'message' => "Impossible de démarrer la réservation avant la date prévue ({$reservation->dateStart})."
+                ], 422);
+            }
+
+            if ($dateStart->lt(now())) {
+                $reservation->dateStart = now();
+                $reservation->save();
+            }
+
+            if ($reservation->car) {
+                $reservation->startKm = $reservation->car->kilometrage;
+            }
         }
+
+        // if ($reservation->status === "En cours" && $reservation->car && !$reservation->startKm) {
+        //     $reservation->startKm = $reservation->car->kilometrage;
+        //     $reservation->save();
+        // }
+
+
+
 
         if ($reservation->status == "En cours") {
             $reservation->car->status = 'Louée';
@@ -226,7 +266,7 @@ class ReservationController extends Controller
         $startDate = \Carbon\Carbon::parse($data['dateStart']);
         $endDate   = \Carbon\Carbon::parse($data['dateBack']);
         $days = $startDate->diffInDays($endDate);
-        $days = round($days);
+        // $days = round($days);
 
         $car = \App\Models\Car::findOrFail($data['car_id']);
         $dayAmount = $car->dayAmount ?? 0;
@@ -267,7 +307,7 @@ class ReservationController extends Controller
         // Récupérer toutes les réservations de l’utilisateur connecté
         $reservations = Reservation::with(['car', 'driver', 'user', 'invoice', 'car.category'])
             ->where('user_id', $user->id)
-            ->orderBy('dateStart', 'asc')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         // Retourner via Resource

@@ -71,7 +71,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::get('/settings', [SettingController::class, 'index']);
     Route::get('/settings/{key}', [SettingController::class, 'show']);
     Route::put('/settings/{key}', [SettingController::class, 'update']);
+    Route::apiResource('carbacks', CarBackController::class);
 });
 
 Route::get('/cars/{car}', [CarController::class, 'show']);
-Route::apiResource('carbacks', CarBackController::class);

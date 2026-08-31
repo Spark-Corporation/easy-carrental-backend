@@ -36,7 +36,7 @@ class PanneController extends Controller
         // Historique
         Historic::create([
             'action'      => 'Enrégistrement de panne',
-            'description' => "Panne #{$panne->id} enregistrée pour la voiture #{$car->id} : {$panne->description}, priorité {$panne->priority}",
+            'description' => "Panne #{$panne->id} enregistrée pour la voiture immatriculée {$panne->car->imatriculation} : {$panne->description}, priorité {$panne->priority}",
             'user_id'     => Auth::id(),
            'actionDate'  => now(),
         ]);
@@ -67,7 +67,7 @@ class PanneController extends Controller
         //Historique
         Historic::create([
             'action'      => 'Mise à jour de panne',
-            'description' => "Panne #{$panne->id} mise à jour pour la voiture #{$panne->car->id} : statut {$panne->status}, montant {$panne->panneAmount}",
+            'description' => "Panne #{$panne->id} mise à jour pour la voiture immatriculée {$panne->car->imatriculation} : statut {$panne->status}, montant {$panne->panneAmount}",
             'user_id'     => Auth::id(),
             'actionDate'  => now(),
         ]);
@@ -84,7 +84,7 @@ class PanneController extends Controller
         //Historique
         Historic::create([
             'action'      => 'Suppression de panne',
-            'description' => "Panne #{$panne->id} supprimée pour la voiture #{$panne->car_id}",
+            'description' => "Panne #{$panne->id} supprimée pour la voiture immatriculée {$panne->car->imatriculation} ",
             'user_id'     => Auth::id(),
             'actionDate'  => now(),
         ]);
