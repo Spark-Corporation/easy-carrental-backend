@@ -14,7 +14,7 @@ class HistoricController extends Controller
      */
     public function index()
     {
-        $historics = Historic::with('user')->orderBy('created_at','desc')->paginate();
+        $historics = Historic::with('user')->orderBy('created_at','desc')->paginate(30);
         return HistoricResource::collection($historics);
     }
 

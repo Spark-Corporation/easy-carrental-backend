@@ -46,6 +46,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/reservations/{id}', [ReservationController::class, 'show']);
     Route::put('/reservations/{id}', [ReservationController::class, 'update']);
     Route::delete('/reservations/{id}', [ReservationController::class, 'destroy']);
+
+    Route::put('/profile', [UserController::class, 'updateProfile']);
+    Route::put('/profile/password', [UserController::class, 'updatePassword']);
 });
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {

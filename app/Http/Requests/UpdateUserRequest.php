@@ -35,19 +35,18 @@ class UpdateUserRequest extends FormRequest
             'email' => [
                 'required',
                 'string',
-                'email',
                 'max:255',
                 Rule::unique('users', 'email')->ignore($userId, 'id'),
             ],
             'password'   => 'sometimes|nullable|string|min:8',
             'type'       => 'nullable|in:physique,morale',
-            'pieceType'  => 'required|string|max:255',
-            'pieceNumber' => 'required|string|max:50',
+            'pieceType'  => 'string|max:255',
+            'pieceNumber' => 'string|max:50',
             'address'     => 'required|string|max:255',
-            'photo' => 'required|image|mimes:jpg,jpeg,png,avif,webp|max:2048',
+            'photo' => 'image|mimes:jpg,jpeg,png,avif,webp|max:2048',
             'phone'      => 'required|string|max:20',
             'active'     => 'nullable|boolean',
-            'role'       => 'required|string|max:50',
+            'role'       => 'string|max:50',
         ];
     }
 
@@ -63,14 +62,14 @@ class UpdateUserRequest extends FormRequest
 
             'password.min'        => 'Le mot de passe doit contenir au moins 8 caractères.',
             'type.in'              => 'Le type doit être soit "physique" soit "morale".',
-            'pieceType.required'  => 'Le type de pièce est obligatoire.',
-            'pieceNumber.required' => 'Le numéro de pièce est obligatoire.',
+            // 'pieceType.required'  => 'Le type de pièce est obligatoire.',
+            // 'pieceNumber.required' => 'Le numéro de pièce est obligatoire.',
             'address.required'    => 'L\'adresse est obligatoire.',
             'phone.required'      => 'Le numéro de téléphone est obligatoire.',
-            'role.required'       => 'Le rôle est obligatoire.',
+            // 'role.required'       => 'Le rôle est obligatoire.',
 
             // Photo
-            'photo.required'  => 'La photo est obligatoire.',
+            // 'photo.required'  => 'La photo est obligatoire.',
             'photo.image'     => 'Le fichier doit être une image.',
             'photo.mimes'     => 'La photo doit être au format jpg, jpeg ou png.',
             'photo.max'       => 'La photo ne doit pas dépasser 2 Mo.',
